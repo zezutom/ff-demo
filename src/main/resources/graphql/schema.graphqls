@@ -1,0 +1,24 @@
+schema {
+    query: Query
+}
+
+type FeatureFlag {
+    key: String!
+    enabled: Boolean!
+}
+
+enum SubscriptionPlan {
+    BASIC
+    PRO
+    ENTERPRISE
+}
+
+type User {
+    id: ID!
+    subscriptionPlan: SubscriptionPlan!
+    featureFlags: [FeatureFlag!]!
+}
+
+type Query {
+    user(id: ID!): User
+}

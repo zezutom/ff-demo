@@ -1,0 +1,26 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/demo
+    username: demo
+    password: demo
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  cache:
+    type: redis
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+
+unleash:
+  api-url: http://localhost:4242/api
+  api-key: your-client-api-key
+  admin-api-url: http://localhost:4242/api/admin
+  admin-api-key: your-admin-api-key
+  app-name: ff-demo
