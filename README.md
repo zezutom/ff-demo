@@ -1,1 +1,1 @@
-echo # ff-demo
+# ff-demo
