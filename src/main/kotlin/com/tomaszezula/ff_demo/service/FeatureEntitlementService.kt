@@ -1,9 +1,12 @@
 package com.tomaszezula.ff_demo.service
 
-import com.tomaszezula.ff_demo.model.FeatureEntitlements
+import com.tomaszezula.ff_demo.model.UserFeatures
 import com.tomaszezula.ff_demo.model.SubscriptionPlan
 import com.tomaszezula.ff_demo.model.UserRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class FeatureEntitlementService(
@@ -11,16 +14,32 @@ class FeatureEntitlementService(
     private val featureService: FeatureService,
 ) {
 
-    fun entitlements(userId: Long): FeatureEntitlements {
-        val user = userRepository.findById(userId).orElseThrow {
-            IllegalArgumentException("User with ID $userId not found")
+    suspend fun getUserFeatures(userId: Long): UserFeatures {
+        return withContext(Dispatchers.IO) {
+            getUserFeaturesInternal(userId)
+        }
+    }
+
+    private suspend fun getUserFeaturesInternal(userId: Long): UserFeatures {
+        val user = userRepository.findById(userId) ?: run {
+            throw IllegalArgumentException("User with ID $userId not found")
         }
         val plan = SubscriptionPlan.valueOf(user.subscriptionPlan.uppercase())
-        val flags = featureService.featureFlags(userId, plan)
-        return FeatureEntitlements(
-            userId = userId,
+        val flags = featureService.featureFlagsInternal(userId, plan)
+        return UserFeatures(
+            id = userId,
             subscriptionPlan = plan,
             featureFlags = flags
         )
+    }
+
+    @Transactional
+    suspend fun updateUserPlan(userId: Long, subscriptionPlan: SubscriptionPlan): UserFeatures {
+        val user = userRepository.findById(userId) ?: run {
+            throw IllegalArgumentException("User with ID $userId not found")
+        }
+        user.subscriptionPlan = subscriptionPlan.name
+        userRepository.save(user)
+        return getUserFeaturesInternal(userId)
     }
 }

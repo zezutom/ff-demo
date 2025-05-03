@@ -1,18 +1,16 @@
 package com.tomaszezula.ff_demo.model
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.Id
-import jakarta.persistence.Table
-import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.annotation.Id
+import org.springframework.data.relational.core.mapping.Column
+import org.springframework.data.relational.core.mapping.Table
+import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-@Entity
 @Table(name = "users")
 data class User(
     @Id
     val id: Long,
-    @Column(name = "subscription_plan")
-    val subscriptionPlan: String
+    @Column("subscription_plan")
+    var subscriptionPlan: String
 )
 
-interface UserRepository : JpaRepository<User, Long>
+interface UserRepository : CoroutineCrudRepository<User, Long>

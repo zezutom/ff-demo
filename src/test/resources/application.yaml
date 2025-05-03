@@ -1,0 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/demo
+    username: demo
+    password: demo
+unleash:
+  api-url: http://localhost:4242/test/
+  api-key: dummy
+  admin-api-url: http://localhost:4242/api/admin/projects/test/
+  admin-api-key: dummy
+  app-name: ff-demo

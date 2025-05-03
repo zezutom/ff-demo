@@ -1,5 +1,6 @@
 schema {
     query: Query
+    mutation: Mutation
 }
 
 type FeatureFlag {
@@ -13,12 +14,16 @@ enum SubscriptionPlan {
     ENTERPRISE
 }
 
-type User {
+type UserFeatures {
     id: ID!
     subscriptionPlan: SubscriptionPlan!
     featureFlags: [FeatureFlag!]!
 }
 
 type Query {
-    user(id: ID!): User
+    user(id: ID!): UserFeatures
+}
+
+type Mutation {
+    updateUserPlan(id: ID!, subscriptionPlan: SubscriptionPlan!): UserFeatures
 }

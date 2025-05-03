@@ -1,15 +1,8 @@
 spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/demo
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/demo
     username: demo
     password: demo
-    driver-class-name: org.postgresql.Driver
-  jpa:
-    hibernate:
-      ddl-auto: update
-    properties:
-      hibernate:
-        dialect: org.hibernate.dialect.PostgreSQLDialect
   cache:
     type: redis
   data:
@@ -19,8 +12,8 @@ spring:
 
 
 unleash:
-  api-url: http://localhost:4242/api
-  api-key: your-client-api-key
-  admin-api-url: http://localhost:4242/api/admin
-  admin-api-key: your-admin-api-key
+  api-url: ${UNLEASH_API_URL}
+  api-key: ${UNLEASH_API_KEY}
+  admin-api-url: ${UNLEASH_ADMIN_API_URL}
+  admin-api-key: ${UNLEASH_ADMIN_API_KEY}
   app-name: ff-demo

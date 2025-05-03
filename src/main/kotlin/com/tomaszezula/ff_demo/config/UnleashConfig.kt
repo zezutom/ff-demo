@@ -23,6 +23,7 @@ class UnleashConfig(
             .instanceId("ff-demo-instance")
             .unleashAPI(apiUrl)
             .apiKey(apiKey)
+//            .fallbackStrategy(SubscriptionStrategy())
             .build()
         return DefaultUnleash(config)
     }

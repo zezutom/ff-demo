@@ -1,6 +1,7 @@
 package com.tomaszezula.ff_demo.service
 
 import com.tomaszezula.ff_demo.model.AdminFeaturesResponse
+import kotlinx.coroutines.reactor.awaitSingle
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
@@ -12,14 +13,14 @@ class UnleashAdminService(
 ) {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
-    fun featureNames(): List<String> {
+    suspend fun featureNames(): List<String> {
         return try {
             val response: AdminFeaturesResponse = client
                 .get()
                 .uri("/features")
                 .retrieve()
                 .bodyToMono(AdminFeaturesResponse::class.java)
-                .block() ?: AdminFeaturesResponse(emptyList())
+                .awaitSingle() ?: AdminFeaturesResponse(emptyList())
             response.features.map { it.name }
         } catch (e: WebClientException) {
             logger.error("Error fetching feature names from Unleash admin API: ${e.message}", e)
