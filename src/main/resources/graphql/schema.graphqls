@@ -9,6 +9,7 @@ type FeatureFlag {
 }
 
 enum SubscriptionPlan {
+    FREE_TRIAL
     BASIC
     PRO
     ENTERPRISE

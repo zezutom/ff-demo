@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-type SubscriptionPlan = 'BASIC' | 'PRO' | 'ENTERPRISE';
+type SubscriptionPlan = 'FREE_TRIAL' | 'BASIC' | 'PRO' | 'ENTERPRISE';
 interface FeatureFlag {
     key: string;
     enabled: boolean;
@@ -102,6 +102,7 @@ const App: React.FC = () => {
                         onChange={e => setPlan(e.target.value as SubscriptionPlan)}
                         style={{ marginLeft: 10 }}
                     >
+                        <option value="FREE_TRIAL">Free Trial</option>
                         <option value="BASIC">Basic</option>
                         <option value="PRO">Pro</option>
                         <option value="ENTERPRISE">Enterprise</option>
