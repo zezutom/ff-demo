@@ -28,6 +28,12 @@ dependencies {
 	implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 	implementation("org.postgresql:r2dbc-postgresql:1.0.7.RELEASE")
 
+	// DB Migrations: Flyway relies on JDBC
+	implementation("org.flywaydb:flyway-core")
+	implementation("org.springframework.boot:spring-boot-starter-jdbc")
+	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.flywaydb:flyway-database-postgresql")
+
 	// JSON serialization
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -40,6 +46,7 @@ dependencies {
 
 	// Feature Flags
 	implementation("io.getunleash:unleash-client-java:10.2.2")
+
 
 	// Tests
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

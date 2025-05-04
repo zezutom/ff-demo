@@ -1,7 +1,9 @@
 package com.tomaszezula.ff_demo.config
 
 import com.tomaszezula.ff_demo.model.SubscriptionPlan
-import com.tomaszezula.ff_demo.model.User
+import com.tomaszezula.ff_demo.model.entity.Entity
+import com.tomaszezula.ff_demo.model.entity.Experiment
+import com.tomaszezula.ff_demo.model.entity.User
 import io.r2dbc.spi.ConnectionFactory
 import kotlinx.coroutines.reactor.awaitSingle
 import kotlinx.coroutines.runBlocking
@@ -29,19 +31,28 @@ class DataConfig(
     @Bean
     fun loadInitialUsers() = ApplicationRunner {
         runBlocking {
-            listOf(
+            // Insert initial users
+            insert(
                 User(1, SubscriptionPlan.FREE_TRIAL.name),
                 User(2, SubscriptionPlan.FREE_TRIAL.name),
-            ).forEach { user ->
-                val exists = template.exists(
-                    Query.query(Criteria.where("id").`is`(user.id)),
-                    User::class.java
-                ).awaitSingle()
-                if (!exists) {
-                    template.insert(User::class.java)
-                        .using(user)
-                        .awaitSingle()
-                }
+            )
+            // Insert initial experiments
+            insert(
+                Experiment(1, "First Purchase", "Extra features reward on the first purchase")
+            )
+        }
+    }
+
+    private suspend inline fun <reified E : Entity> insert(vararg entity: E) {
+        entity.forEach {
+            val exists = template.exists(
+                Query.query(Criteria.where("id").`is`(it.id)),
+                User::class.java
+            ).awaitSingle()
+            if (!exists) {
+                template.insert(E::class.java)
+                    .using(it)
+                    .awaitSingle()
             }
         }
     }

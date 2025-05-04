@@ -3,6 +3,12 @@ spring:
     url: r2dbc:postgresql://localhost:5432/demo
     username: demo
     password: demo
+  flyway:
+    enabled: true
+    url: jdbc:postgresql://localhost:5432/demo
+    user: demo
+    password: demo
+    locations: classpath:db/migration
   cache:
     type: redis
   data:
