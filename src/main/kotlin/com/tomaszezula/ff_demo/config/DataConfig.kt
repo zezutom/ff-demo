@@ -38,7 +38,7 @@ class DataConfig(
             )
             // Insert initial experiments
             insert(
-                Experiment(1, "First Purchase", "Extra features reward on the first purchase")
+                Experiment(1, "FIRST_PURCHASE", "Extra features reward on the first purchase")
             )
         }
     }
@@ -46,8 +46,8 @@ class DataConfig(
     private suspend inline fun <reified E : Entity> insert(vararg entity: E) {
         entity.forEach {
             val exists = template.exists(
-                Query.query(Criteria.where("id").`is`(it.id)),
-                User::class.java
+                Query.query(Criteria.where("id").`is`(it.id!!)),
+                E::class.java
             ).awaitSingle()
             if (!exists) {
                 template.insert(E::class.java)

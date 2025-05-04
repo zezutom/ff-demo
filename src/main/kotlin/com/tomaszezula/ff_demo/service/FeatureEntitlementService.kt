@@ -3,8 +3,10 @@ package com.tomaszezula.ff_demo.service
 import com.tomaszezula.ff_demo.model.SubscriptionPlan
 import com.tomaszezula.ff_demo.model.UserFeatures
 import com.tomaszezula.ff_demo.model.entity.UserRepository
+import com.tomaszezula.ff_demo.model.event.PlanChangeEvent
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional
 class FeatureEntitlementService(
     private val userRepository: UserRepository,
     private val featureService: FeatureService,
+    private val publisher: ApplicationEventPublisher,
 ) {
 
     suspend fun getUserFeatures(userId: Long): UserFeatures {
@@ -25,9 +28,21 @@ class FeatureEntitlementService(
         val user = userRepository.findById(userId) ?: run {
             throw IllegalArgumentException("User with ID $userId not found")
         }
+        val oldPlan = SubscriptionPlan.valueOf(user.subscriptionPlan)
         user.subscriptionPlan = subscriptionPlan.name
         userRepository.save(user)
-        return getUserFeaturesInternal(userId)
+        val userFeatures = getUserFeaturesInternal(userId)
+
+        // Publish the event after the user plan has been updated
+        publisher.publishEvent(
+            PlanChangeEvent(
+                userId = userId,
+                oldPlan = oldPlan,
+                newPlan = subscriptionPlan
+            )
+        )
+
+        return userFeatures
     }
 
     private suspend fun getUserFeaturesInternal(userId: Long): UserFeatures {

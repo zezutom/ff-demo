@@ -7,7 +7,7 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 @Table(name = "experiments")
 data class Experiment(
     @Id
-    override val id: Long,
+    override val id: Long? = null,
     val name: String,
     val description: String?,
     val active: Boolean = true,

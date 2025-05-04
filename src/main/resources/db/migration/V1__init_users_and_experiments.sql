@@ -13,6 +13,6 @@ CREATE TABLE IF NOT EXISTS experiments (
 CREATE TABLE IF NOT EXISTS user_experiments (
     id SERIAL PRIMARY KEY,
     user_id BIGINT NOT NULL REFERENCES users(id),
-    segment_id INT NOT NULL REFERENCES experiments(id),
+    experiment_id INT NOT NULL REFERENCES experiments(id),
     assigned_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

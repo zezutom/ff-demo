@@ -8,7 +8,7 @@ import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 @Table(name = "users")
 data class User(
     @Id
-    override val id: Long,
+    override val id: Long? = null,
     @Column("subscription_plan")
     var subscriptionPlan: String
 ) : Entity
