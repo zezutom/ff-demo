@@ -7,6 +7,7 @@ import com.tomaszezula.ff_demo.model.entity.UserExperimentRepository
 import io.getunleash.Unleash
 import io.getunleash.UnleashContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.withContext
 import org.slf4j.LoggerFactory
 import org.springframework.cache.annotation.Cacheable
@@ -34,19 +35,18 @@ class FeatureService(
             .userId(userId.toString())
             .addProperty("plan", plan.name)
 
-        // TODO This is currently limited to a single experiment per user
-        userExperimentRepository.findByUserId(userId).firstOrNull()?.let {
-            experimentRepository.findById(it.experimentId)
-        }?.let { experiment ->
-            contextBuilder.addProperty("experiment", experiment.name)
+        val userExperiments = userExperimentRepository.findByUserId(userId)
+        if (userExperiments.isNotEmpty()) {
+            val experiments = experimentRepository.findAllById(userExperiments.map { it.experimentId }).toList()
+            contextBuilder.addProperty("experiment", experiments.joinToString(",") { it.name })
         }
-
+        val context = contextBuilder.build()
         val featureNames = adminService.featureNames()
         featureNames.map { featureName ->
             FeatureFlag(
                 key = featureName,
                 enabled = withContext(Dispatchers.IO) {
-                    unleash.isEnabled(featureName, contextBuilder.build())
+                    unleash.isEnabled(featureName, context)
                 }
             )
         }

@@ -34,7 +34,7 @@ class DataConfig(
             // Insert initial users
             insert(
                 User(1, SubscriptionPlan.FREE_TRIAL.name),
-                User(2, SubscriptionPlan.FREE_TRIAL.name),
+                User(2, SubscriptionPlan.BASIC.name),
             )
             // Insert initial experiments
             insert(
