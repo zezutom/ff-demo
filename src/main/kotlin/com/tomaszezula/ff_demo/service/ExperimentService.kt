@@ -4,6 +4,7 @@ import com.tomaszezula.ff_demo.model.SubscriptionPlan
 import com.tomaszezula.ff_demo.model.entity.ExperimentRepository
 import com.tomaszezula.ff_demo.model.entity.UserExperiment
 import com.tomaszezula.ff_demo.model.entity.UserExperimentRepository
+import com.tomaszezula.ff_demo.model.isFree
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Propagation
@@ -23,7 +24,7 @@ class ExperimentService(
     private val rules: Map<String, PlanChangeEvaluator> = mapOf(
         FIRST_PURCHASE to { oldPlan, newPlan ->
             // If the user is changing from a free plan to a paid plan
-            oldPlan == SubscriptionPlan.FREE_TRIAL && newPlan != SubscriptionPlan.FREE_TRIAL
+            oldPlan.isFree() && !newPlan.isFree()
         },
     )
 

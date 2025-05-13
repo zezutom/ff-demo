@@ -23,8 +23,10 @@ class FeatureController(
         @Argument id: Long,
         @Argument subscriptionPlan: SubscriptionPlan
     ): UserFeatures {
-        val userFeatures = featureEntitlementService.updateUserPlan(id, subscriptionPlan)
-        return userFeatures
+        // Let the magic happen
+        featureEntitlementService.updateUserPlan(id, subscriptionPlan)
+        // Fetch the updated user features
+        return featureEntitlementService.getUserFeatures(id)
     }
 
 }
